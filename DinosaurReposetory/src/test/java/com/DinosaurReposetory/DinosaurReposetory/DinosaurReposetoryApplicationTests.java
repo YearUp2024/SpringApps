@@ -1,10 +1,10 @@
-package com.example.readingList;
+package com.DinosaurReposetory.DinosaurReposetory;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ReadingListApplicationTests {
+class DinosaurReposetoryApplicationTests {
 
 	@Test
 	void contextLoads() {
