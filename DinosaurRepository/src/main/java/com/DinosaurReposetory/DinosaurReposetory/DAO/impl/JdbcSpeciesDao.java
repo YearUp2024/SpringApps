@@ -4,7 +4,6 @@ import com.DinosaurReposetory.DinosaurReposetory.DAO.Interfaces.SpeciesDao;
 import com.DinosaurReposetory.DinosaurReposetory.Models.Species;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

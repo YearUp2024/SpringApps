@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/species")
+@RequestMapping
 public class SpeciesControllers {
     private SpeciesDao speciesDao;
 
@@ -19,9 +19,8 @@ public class SpeciesControllers {
         this.speciesDao = speciesDao;
     }
 
-    @GetMapping("/all")
-    public List<Species> getAllSpecies(){
+    @GetMapping("/dinosaurs")
+    public List<Species> getAllDinosaurs() {
         return speciesDao.getAllSpecies();
     }
-
 }
