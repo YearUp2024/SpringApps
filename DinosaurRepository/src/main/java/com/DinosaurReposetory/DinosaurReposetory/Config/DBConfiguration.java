@@ -13,7 +13,7 @@ public class DBConfiguration {
 
     @Bean
     public DataSource dataSource(){
-        return dataSource();
+        return basicDataSource;
     }
 
     public DBConfiguration(
