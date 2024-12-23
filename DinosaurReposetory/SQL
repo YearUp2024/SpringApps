@@ -1,0 +1,59 @@
+USE sys;
+
+# ---------------------------------------------------------------------- #
+# Target DBMS:           MySQL                                             #
+# Project name:          DinosaurZoo                                       #
+# ---------------------------------------------------------------------- #
+
+DROP DATABASE IF EXISTS dinosaur_zoo;
+
+CREATE DATABASE IF NOT EXISTS dinosaur_zoo;
+
+USE dinosaur_zoo;
+
+# ---------------------------------------------------------------------- #
+# Tables                                                                   #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE species (
+    species_id INT NOT NULL AUTO_INCREMENT,
+    species_name VARCHAR(100) NOT NULL,
+    period VARCHAR(50) NOT NULL,
+    diet_type VARCHAR(20) NOT NULL,
+    description TEXT,
+    PRIMARY KEY (species_id)
+);
+
+CREATE TABLE dinosaurs (
+    dinosaur_id INT NOT NULL AUTO_INCREMENT,
+    dinosaur_name VARCHAR(100) NOT NULL,
+    species_id INT NOT NULL,
+    age INT NOT NULL,
+    story TEXT,
+    birth_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (dinosaur_id),
+    FOREIGN KEY (species_id) REFERENCES species(species_id)
+);
+
+# ---------------------------------------------------------------------- #
+# Sample Data                                                             #
+# ---------------------------------------------------------------------- #
+
+INSERT INTO species (species_name, period, diet_type, description)
+VALUES
+    ('Tyrannosaurus Rex', 'Late Cretaceous', 'Carnivore', 'The "King of the Tyrant Lizards" was one of the largest land carnivores of all time, with a massive skull and powerful jaws.'),
+    ('Velociraptor', 'Late Cretaceous', 'Carnivore', 'A swift and agile predator known for its intelligence and hunting skills. Featured distinctive sickle-shaped claws.'),
+    ('Stegosaurus', 'Late Jurassic', 'Herbivore', 'Known for its row of unique plates along its back and tail spikes. A peaceful plant-eater from the Jurassic period.'),
+    ('Triceratops', 'Late Cretaceous', 'Herbivore', 'Distinguished by its three horns and large frill, this herbivore used its features for defense and display.'),
+    ('Brachiosaurus', 'Late Jurassic', 'Herbivore', 'One of the largest dinosaurs, known for its long neck and tree-top feeding habits.');
+
+INSERT INTO dinosaurs (dinosaur_name, species_id, age, story)
+VALUES
+    ('Rex', 1, 15, 'Rex is our oldest T-Rex resident. Despite being a fierce predator, he has a gentle side and enjoys basking in the morning sun.'),
+    ('Blue', 2, 6, 'Blue is the fastest of our Velociraptors. She demonstrates remarkable problem-solving abilities and loves interactive enrichment activities.'),
+    ('Spike', 3, 12, 'Spike is a gentle giant who loves munching on our special fern garden. The plates on his back change color slightly based on his mood.'),
+    ('Trinity', 4, 8, 'Trinity is named for her perfect three horns. She''s protective of her herd and has a particular fondness for fresh flowers.'),
+    ('Atlas', 5, 25, 'Atlas is our tallest resident, reaching the highest tree tops. Despite his massive size, he''s known for being exceptionally gentle.'),
+    ('Shadow', 1, 10, 'Shadow earned his name from his dark scales and stealthy movement, unusual for a T-Rex of his size.'),
+    ('Nova', 2, 4, 'Nova is our youngest Velociraptor, known for her distinctive golden stripe and playful personality.'),
+    ('Rocky', 3, 14, 'Rocky is our most social Stegosaurus, often seen interacting with other herbivores in the sanctuary.');
