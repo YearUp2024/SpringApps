@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/dinosaurs")
+@RequestMapping("/species")
 public class SpeciesControllers {
     private SpeciesDao speciesDao;
 
