@@ -25,8 +25,8 @@ public class SpeciesControllers {
         return speciesDao.getAllSpecies();
     }
 
-    @GetMapping("/{species_name}")
-    public Species getSpeciesByName(@PathVariable String species_name){
+    @GetMapping("/{name}")
+    public Species getSpeciesByName(@PathVariable("name") String species_name){
         return speciesDao.getSpeciesByName(species_name);
     }
 }

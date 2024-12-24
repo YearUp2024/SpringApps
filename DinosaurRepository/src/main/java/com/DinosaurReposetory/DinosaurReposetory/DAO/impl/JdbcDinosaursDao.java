@@ -52,7 +52,35 @@ public class JdbcDinosaursDao implements DinosaursDao {
     }
 
     @Override
-    public Dinosaurs getDinosaursByName() {
+    public Dinosaurs getDinosaursByName(String dinosaurName) {
+        Dinosaurs dinosaurs;
+        String sql =
+                """
+                SELECT *\s
+                FROM dinosaur_zoo.dinosaurs
+                WHERE dinosaur_name = ?
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, dinosaurName);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()){
+                    int speciesId = resultSet.getInt(1);
+                    String speciesName = resultSet.getString(2);
+                    String period = resultSet.getString(3);
+                    String dietType = resultSet.getString(4);
+                    String description = resultSet.getString(5);
+
+                    return new Dinosaurs(speciesId, speciesName, period, dietType, description);
+                }
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
         return null;
     }
 }
