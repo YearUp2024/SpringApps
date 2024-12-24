@@ -14,6 +14,9 @@ public class HomeController {
     public List<String> index(@RequestParam(defaultValue = "World") String country){
         List<String> urls = new ArrayList<>();
         urls.add("Dinosaurs: http://localhost:8080/dinosaurs");
+        urls.add("Dinosaurs: http://localhost:8080/dinosaurs/dinosaurName");
+        urls.add("Dinosaurs: http://localhost:8080/species");
+        urls.add("Dinosaurs: http://localhost:8080/species/speciesName");
 
         return urls;
     }
