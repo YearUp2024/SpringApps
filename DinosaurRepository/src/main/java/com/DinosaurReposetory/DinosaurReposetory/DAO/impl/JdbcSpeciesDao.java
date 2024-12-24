@@ -37,7 +37,6 @@ public class JdbcSpeciesDao implements SpeciesDao {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 ResultSet resultSet = preparedStatement.executeQuery();
         ){
-
             while(resultSet.next()){
                 int speciesId = resultSet.getInt(1);
                 String speciesName = resultSet.getString(2);
@@ -56,6 +55,35 @@ public class JdbcSpeciesDao implements SpeciesDao {
 
     @Override
     public Species getSpeciesByName(String speciesName) {
+        Species speciesByName;
+
+        String sql =
+                """
+                SELECT *
+                FROM dinosaur_zoo.species
+                WHERE species_name = ?
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, speciesName);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()){
+                    int speciesId = resultSet.getInt(1);
+                    String specieName = resultSet.getString(2);
+                    String period = resultSet.getString(3);
+                    String dietType = resultSet.getString(4);
+                    String description = resultSet.getString(5);
+
+                    return new Species(speciesId, specieName, period, dietType, description);
+                }
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
         return null;
     }
 }
