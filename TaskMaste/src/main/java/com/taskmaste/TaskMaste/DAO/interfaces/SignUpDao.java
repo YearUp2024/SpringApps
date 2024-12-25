@@ -1,6 +1,6 @@
 package com.taskmaste.TaskMaste.DAO.interfaces;
 
-public interface SignUp {
+public interface SignUpDao {
     boolean createUser(String username, String email, String password);
     boolean isUserNameAvailable(String username);
     boolean isEmailAvailable(String email);
