@@ -28,4 +28,13 @@ public class SignUpController {
         }
         return ResponseEntity.badRequest().body("Failed to create users");
     }
+
+    @PostMapping("/check-username")
+    public ResponseEntity<String> checkUsername(@RequestBody SignUp signUp){
+        boolean usernameAvailable = signUpDao.isUserNameAvailable(signUp.getUserName());
+        if(usernameAvailable){
+            return ResponseEntity.ok("Username is available!");
+        }
+        return ResponseEntity.badRequest().body("Username is not available");
+    }
 }

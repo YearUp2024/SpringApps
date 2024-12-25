@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
@@ -46,9 +47,26 @@ public class JdbcSignUpDao implements SignUpDao {
         }
     }
 
-
     @Override
     public boolean isUserNameAvailable(String username) {
+        String sql =
+                """
+                SELECT COUNT(*) FROM task_manager.users WHERE username = ?;
+                """;
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, username);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()){
+                return resultSet.getInt(1) == 0;
+            }
+        }catch(SQLException e){
+            log.error("Error checking username available.", e);
+        }
         return false;
     }
 
