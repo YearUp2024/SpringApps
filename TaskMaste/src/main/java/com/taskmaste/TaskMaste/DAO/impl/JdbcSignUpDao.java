@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-
 @Component
 public class JdbcSignUpDao implements SignUpDao {
     private static final Logger log = LoggerFactory.getLogger(JdbcSignUpDao.class);
@@ -24,26 +23,29 @@ public class JdbcSignUpDao implements SignUpDao {
 
     @Override
     public boolean createUser(String username, String email, String password) {
-        String sql =
-                """
-                INSERT INTO task_manager.users (username, email, password)
-                VALUES (?, ?, ?);
-                """;
-        try(
-                Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        ){
+        String sql = """
+            INSERT INTO task_manager.users (username, email, password)
+            VALUES (?, ?, ?);
+            """;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, email);
             preparedStatement.setString(3, password);
 
             int rowsAffected = preparedStatement.executeUpdate();
+            log.info("User created successfully: {}", username);
             return rowsAffected > 0;
-        }catch(SQLException e){
-            log.error("There was an error while creating your account", e);
+
+        } catch (SQLException e) {
+            log.error("Database error: {}", e.getMessage());
+            log.error("SQL State: {}", e.getSQLState());
+            log.error("Error Code: {}", e.getErrorCode());
             return false;
         }
     }
+
 
     @Override
     public boolean isUserNameAvailable(String username) {

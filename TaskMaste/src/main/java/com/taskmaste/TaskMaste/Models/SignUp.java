@@ -1,22 +1,22 @@
 package com.taskmaste.TaskMaste.Models;
 
 public class SignUp {
-    private String userName;
+    private String username;
     private String email;
     private String password;
 
-    public SignUp(String userName, String email, String password) {
-        this.userName = userName;
+    public SignUp(String username, String email, String password) {
+        this.username = username;
         this.email = email;
         this.password = password;
     }
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
 
     public String getEmail() {

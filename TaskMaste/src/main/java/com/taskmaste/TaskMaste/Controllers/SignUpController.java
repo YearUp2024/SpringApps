@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/signup")
 public class SignUpController {
-    private SignUpDao signUpDao;
+    private final SignUpDao signUpDao;
 
     @Autowired
     public SignUpController(SignUpDao signUpDao) {
