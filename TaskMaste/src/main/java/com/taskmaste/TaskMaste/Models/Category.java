@@ -1,11 +1,11 @@
 package com.taskmaste.TaskMaste.Models;
 
-public class Categories {
+public class Category {
     private String name;
     private String description;
     private int userId;
 
-    public Categories(String name, String description, int userId) {
+    public Category(String name, String description, int userId) {
         this.name = name;
         this.description = description;
         this.userId = userId;
