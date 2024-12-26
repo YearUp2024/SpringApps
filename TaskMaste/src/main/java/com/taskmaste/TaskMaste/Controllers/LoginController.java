@@ -16,7 +16,7 @@ public class LoginController {
         this.loginDao = loginDao;
     }
 
-    @PostMapping
+    @PostMapping("/authenticate")
     public ResponseEntity<String> loginUser(@RequestBody Login login){
         boolean loggedIn = loginDao.validateLogin(login.getUsername(), login.getPassword());
 
@@ -24,5 +24,15 @@ public class LoginController {
             return ResponseEntity.ok("Logged in Successfully!");
         }
         return ResponseEntity.badRequest().body("Logged in Failed!");
+    }
+
+    @PostMapping("/check-username")
+    public ResponseEntity<String> matchUsername(@RequestBody Login login){
+        boolean checkUsername = loginDao.checkUserExists(login.getUsername());
+
+        if(checkUsername){
+            return ResponseEntity.ok("Username is a match!");
+        }
+        return ResponseEntity.badRequest().body("Username does not match!");
     }
 }

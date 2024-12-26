@@ -50,6 +50,27 @@ public class JdbcLoginDao implements LoginDao {
 
     @Override
     public boolean checkUserExists(String username) {
+        String sql =
+                """
+                SELECT username
+                FROM task_manager.users
+                WHERE username = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, username);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                String storedUsername = resultSet.getString("username");
+                return username.matches(storedUsername);
+            }
+        }catch(SQLException e){
+            log.error("Error while logging in: {}", e.getMessage());
+        }
         return false;
     }
 
