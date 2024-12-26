@@ -49,4 +49,18 @@ public class SignUpController {
         }
         return ResponseEntity.badRequest().body("Email is not available!");
     }
+
+    @PostMapping("/check-password")
+    public ResponseEntity<String> checkPassword(@RequestBody SignUp signUp){
+        if (signUp.getPassword().length() < 8 || signUp.getConfirmPassword().length() < 8) {
+            return ResponseEntity.badRequest().body("Password not long enough!");
+        }
+
+        boolean machPassword = signUpDao.validatePassword(signUp.getPassword(), signUp.getConfirmPassword());
+
+        if(machPassword){
+            return ResponseEntity.ok("Password match");
+        }
+        return ResponseEntity.badRequest().body("Password does not match");
+    }
 }

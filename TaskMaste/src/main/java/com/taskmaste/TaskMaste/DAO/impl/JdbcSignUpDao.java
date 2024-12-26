@@ -92,8 +92,10 @@ public class JdbcSignUpDao implements SignUpDao {
     }
 
     @Override
-    public boolean validatePassword(String password, String confirmPassword) {
-        return false;
+    public boolean validatePassword(String password, String confirmpassword) {
+        return password != null &&
+                password.equals(confirmpassword) &&
+                password.length() >= 8;
     }
 
     @Override
