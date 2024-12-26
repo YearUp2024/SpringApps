@@ -52,7 +52,7 @@ public class JdbcLoginDao implements LoginDao {
     public boolean checkUserExists(String username) {
         String sql =
                 """
-                SELECT username
+                SELECT COUNT(*)
                 FROM task_manager.users
                 WHERE username = ?;
                 """;
@@ -65,17 +65,32 @@ public class JdbcLoginDao implements LoginDao {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
-                String storedUsername = resultSet.getString("username");
-                return username.matches(storedUsername);
+                return resultSet.getInt(1) > 0;
             }
         }catch(SQLException e){
-            log.error("Error while logging in: {}", e.getMessage());
+            log.error("Error checking username: {}", e.getMessage());
         }
         return false;
     }
 
     @Override
     public String getStoredPassword(String password) {
-        return "";
+        String sql = """
+                SELECT password
+                FROM task_manager.users
+                WHERE password = ?
+                """;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("password");
+            }
+        } catch (SQLException e) {
+            log.error("Error retrieving password: {}", e.getMessage());
+        }
+        return null;
     }
 }

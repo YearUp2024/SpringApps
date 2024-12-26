@@ -35,4 +35,15 @@ public class LoginController {
         }
         return ResponseEntity.badRequest().body("Username does not match!");
     }
+
+    @PostMapping("/check-password")
+    public ResponseEntity<String> matchPassword(@RequestBody Login login){
+        String storedPassword = loginDao.getStoredPassword(login.getPassword());
+        boolean checkPassword = storedPassword != null && login.getPassword().equals(storedPassword);
+
+        if(checkPassword){
+            return ResponseEntity.ok("Password is match!");
+        }
+        return ResponseEntity.badRequest().body("Password does not match!");
+    }
 }
