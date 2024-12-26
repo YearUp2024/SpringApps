@@ -42,6 +42,10 @@ public class SignUpController {
 
     @PostMapping("/check-email")
     public ResponseEntity<String> checkEmail(@RequestBody SignUp signUp){
+        if(!signUpDao.validateEmail(signUp.getEmail())){
+            return ResponseEntity.badRequest().body("Invalid email format!");
+        }
+
         boolean emailAvailable = signUpDao.isEmailAvailable(signUp.getEmail());
 
         if(emailAvailable){
@@ -51,7 +55,7 @@ public class SignUpController {
     }
 
     @PostMapping("/check-password")
-    public ResponseEntity<String> checkPassword(@RequestBody SignUp signUp){
+    public ResponseEntity<String> validPassword(@RequestBody SignUp signUp){
         if (signUp.getPassword().length() < 8 || signUp.getConfirmPassword().length() < 8) {
             return ResponseEntity.badRequest().body("Password not long enough!");
         }
