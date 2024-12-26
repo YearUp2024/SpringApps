@@ -58,7 +58,34 @@ public class JdbcCategoryDao implements CategoryDao {
     }
 
     @Override
-    public Category getCategoryById(int categoryId) {
+    public Category getCategoryByName(String categoryName, int userId) {
+        String sql =
+                """
+                SELECT name, description, user_id
+                FROM task_manager.categories
+                WHERE name = ? AND user_id = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, categoryName);
+            preparedStatement.setInt(2, userId);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()){
+                    Category category = new Category(
+                            resultSet.getString("name"),
+                            resultSet.getString("description"),
+                            resultSet.getInt("user_id")
+                    );
+                    return category;
+                }
+            }
+        }catch(SQLException e){
+            log.error("Error getting Category by Name!");
+        }
         return null;
     }
 

@@ -22,4 +22,8 @@ public class CategoryController {
         return categoryDao.getAllCategories(userId);
     }
 
+    @GetMapping("/{name}")
+    public Category categoryByName(@PathVariable String name, @RequestParam int userId){
+        return categoryDao.getCategoryByName(name, userId);
+    }
 }
