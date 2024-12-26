@@ -60,7 +60,6 @@ public class JdbcSignUpDao implements SignUpDao {
             preparedStatement.setString(1, username);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-
             if(resultSet.next()){
                 return resultSet.getInt(1) == 0;
             }
@@ -72,6 +71,23 @@ public class JdbcSignUpDao implements SignUpDao {
 
     @Override
     public boolean isEmailAvailable(String email) {
+        String sql =
+                """
+                SELECT COUNT(*) FROM task_manager.users WHERE email = ?;
+                """;
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, email);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt(1) == 0;
+            }
+        }catch(SQLException e){
+            log.error("Error checking email available.", e);
+        }
         return false;
     }
 

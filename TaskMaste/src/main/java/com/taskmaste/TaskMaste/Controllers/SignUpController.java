@@ -23,6 +23,7 @@ public class SignUpController {
                 signUp.getEmail(),
                 signUp.getPassword()
         );
+
         if(isCreate){
             return ResponseEntity.ok("User Created Successfully!");
         }
@@ -32,9 +33,20 @@ public class SignUpController {
     @PostMapping("/check-username")
     public ResponseEntity<String> checkUsername(@RequestBody SignUp signUp){
         boolean usernameAvailable = signUpDao.isUserNameAvailable(signUp.getUserName());
+
         if(usernameAvailable){
             return ResponseEntity.ok("Username is available!");
         }
-        return ResponseEntity.badRequest().body("Username is not available");
+        return ResponseEntity.badRequest().body("Username is not available!");
+    }
+
+    @PostMapping("/check-email")
+    public ResponseEntity<String> checkEmail(@RequestBody SignUp signUp){
+        boolean emailAvailable = signUpDao.isEmailAvailable(signUp.getEmail());
+
+        if(emailAvailable){
+            return ResponseEntity.ok("Email is available!");
+        }
+        return ResponseEntity.badRequest().body("Email is not available!");
     }
 }
