@@ -3,6 +3,7 @@ package com.taskmaste.TaskMaste.Controllers;
 import com.taskmaste.TaskMaste.DAO.interfaces.CategoryDao;
 import com.taskmaste.TaskMaste.Models.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,17 @@ public class CategoryController {
     }
 
     @GetMapping("/{name}")
-    public Category categoryByName(@PathVariable String name, @RequestParam int userId){
+    public Category getCategoryByName(@PathVariable String name, @RequestParam int userId){
         return categoryDao.getCategoryByName(name, userId);
+    }
+
+    @PostMapping
+    public ResponseEntity<String> createCategory(@RequestBody Category category){
+       boolean categoryCreated = categoryDao.createCategory(category.getName(), category.getDescription(), category.getUserId());
+
+       if(categoryCreated){
+           return ResponseEntity.ok("Category Created Successfully!");
+       }
+       return ResponseEntity.badRequest().body("Category could not be created");
     }
 }

@@ -91,6 +91,25 @@ public class JdbcCategoryDao implements CategoryDao {
 
     @Override
     public boolean createCategory(String name, String description, int userId) {
+        String sql =
+                """
+                INSERT INTO task_manager.categories (name, description, user_id)
+                VALUES (?, ?, ?)
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, description);
+            preparedStatement.setInt(3, userId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        }catch(SQLException e){
+            log.error("Error while creating Category!");
+        }
         return false;
     }
 
