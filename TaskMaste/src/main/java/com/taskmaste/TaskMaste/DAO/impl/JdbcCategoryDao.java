@@ -140,7 +140,25 @@ public class JdbcCategoryDao implements CategoryDao {
     }
 
     @Override
-    public boolean deleteCategory(int categoryId) {
+    public boolean deleteCategory(int categoryId, int userId) {
+        String sql =
+                """
+                DELETE FROM task_manager.categories
+                WHERE category_id = ? AND user_id = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setInt(1, categoryId);
+            preparedStatement.setInt(2, userId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        }catch(SQLException e){
+            log.error("Error Deleting Category", e);
+        }
         return false;
     }
 

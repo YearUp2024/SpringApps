@@ -9,6 +9,6 @@ public interface CategoryDao {
     Category getCategoryByName(String categoryName, int userId);
     boolean createCategory(String name, String description, int userId);
     boolean updateCategory(int categoryId, String name, String description, int userId);
-    boolean deleteCategory(int categoryId);
+    boolean deleteCategory(int categoryId, int userId);
     boolean isCategoryNameAvailable(String name, int userId);
 }

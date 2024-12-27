@@ -47,4 +47,14 @@ public class CategoryController {
         }
         return ResponseEntity.badRequest().body("Category Update Failed!");
     }
+
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<String> deleteCategory(@PathVariable int categoryId, @RequestBody Category category){
+        boolean categoryDelete = categoryDao.deleteCategory(categoryId, category.getUserId());
+
+        if(categoryDelete){
+            return ResponseEntity.ok("Category Deleted Successfully!");
+        }
+        return ResponseEntity.badRequest().body("Category Delete Failed!");
+    }
 }
