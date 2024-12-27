@@ -114,7 +114,28 @@ public class JdbcCategoryDao implements CategoryDao {
     }
 
     @Override
-    public boolean updateCategory(int categoryId, String name, String description) {
+    public boolean updateCategory(int categoryId, String name, String description, int userId) {
+        String sql =
+                """
+                UPDATE task_manager.categories
+                SET name = ?, description = ?
+                WHERE user_id = ? AND category_id = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, description);
+            preparedStatement.setInt(3, userId);
+            preparedStatement.setInt(4, categoryId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        }catch(SQLException e){
+            log.error("Error while updating Category!");
+        }
         return false;
     }
 

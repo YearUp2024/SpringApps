@@ -37,4 +37,14 @@ public class CategoryController {
        }
        return ResponseEntity.badRequest().body("Category could not be created");
     }
+
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<String> updateCategory(@PathVariable int categoryId , @RequestBody Category category){
+        boolean categoryUpdated = categoryDao.updateCategory(categoryId, category.getName(), category.getDescription(), category.getUserId());
+
+        if(categoryUpdated){
+            return ResponseEntity.ok("Category Updated Successfully!");
+        }
+        return ResponseEntity.badRequest().body("Category Update Failed!");
+    }
 }
