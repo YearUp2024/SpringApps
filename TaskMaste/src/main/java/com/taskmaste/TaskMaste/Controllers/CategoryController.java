@@ -57,4 +57,14 @@ public class CategoryController {
         }
         return ResponseEntity.badRequest().body("Category Delete Failed!");
     }
+
+    @PostMapping("/check-name")
+    public ResponseEntity<String> nameAvailable(@RequestBody Category category){
+        boolean availableName = categoryDao.isCategoryNameAvailable(category.getName(), category.getUserId());
+
+        if(availableName){
+            return ResponseEntity.ok("Category Name is Available!");
+        }
+        return ResponseEntity.badRequest().body("Category already Created!");
+    }
 }

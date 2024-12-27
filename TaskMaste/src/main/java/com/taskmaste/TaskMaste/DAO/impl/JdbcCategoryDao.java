@@ -52,7 +52,7 @@ public class JdbcCategoryDao implements CategoryDao {
                 }
             }
         }catch(SQLException e){
-            log.error("Error getting All Categories!", e);
+            log.error("Error getting All Categories: {}", e.getMessage());
         }
         return categories;
     }
@@ -84,7 +84,7 @@ public class JdbcCategoryDao implements CategoryDao {
                 }
             }
         }catch(SQLException e){
-            log.error("Error getting Category by Name!");
+            log.error("Error getting Category by Name: ", e.getMessage());
         }
         return null;
     }
@@ -108,7 +108,7 @@ public class JdbcCategoryDao implements CategoryDao {
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
         }catch(SQLException e){
-            log.error("Error while creating Category!");
+            log.error("Error while Creating Category: {}", e.getMessage());
         }
         return false;
     }
@@ -134,7 +134,7 @@ public class JdbcCategoryDao implements CategoryDao {
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
         }catch(SQLException e){
-            log.error("Error while updating Category!");
+            log.error("Error while Updating Category: {}", e.getMessage());
         }
         return false;
     }
@@ -157,13 +157,35 @@ public class JdbcCategoryDao implements CategoryDao {
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
         }catch(SQLException e){
-            log.error("Error Deleting Category", e);
+            log.error("Error while Deleting Category: {}", e.getMessage());
         }
         return false;
     }
 
     @Override
     public boolean isCategoryNameAvailable(String name, int userId) {
+        String sql =
+                """
+                SELECT COUNT(*)
+                FROM task_manager.categories
+                WHERE name = ? AND user_id = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, userId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) == 0;
+                }
+            }
+        }catch(SQLException e){
+            log.error("Error while checking for name match: {}", e.getMessage());
+        }
         return false;
     }
 }
