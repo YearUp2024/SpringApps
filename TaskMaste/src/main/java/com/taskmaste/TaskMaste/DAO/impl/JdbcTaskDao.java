@@ -197,7 +197,29 @@ public class JdbcTaskDao implements TaskDao {
     }
 
     @Override
-    public boolean isTaskNameAvailable(String name, int userId) {
+    public boolean isTaskNameAvailable(int userId, String name) {
+        String sql =
+                """
+                SELECT COUNT(*)
+                FROM task_manager.tasks
+                WHERE user_id = ? AND title = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2, name);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) == 0;
+                }
+            }
+        }catch(SQLException e){
+            log.error("Error while trying to look for Available Name: {}", e.getMessage());
+        }
         return false;
     }
 }

@@ -12,5 +12,5 @@ public interface TaskDao {
     boolean createTask(String name, String description, Date duedate, boolean completionstatus, String taskType, int categoryId, int userId);
     boolean updateTaskStatus(int taskId, boolean completionstatus);
     boolean deleteTask(int taskId);
-    boolean isTaskNameAvailable(String name, int userId);
+    boolean isTaskNameAvailable(int userId, String name);
 }

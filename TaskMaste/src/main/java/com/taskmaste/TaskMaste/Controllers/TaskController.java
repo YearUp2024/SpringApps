@@ -2,6 +2,7 @@ package com.taskmaste.TaskMaste.Controllers;
 
 import com.taskmaste.TaskMaste.DAO.interfaces.TaskDao;
 import com.taskmaste.TaskMaste.Models.Task;
+import com.taskmaste.TaskMaste.Models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -74,5 +75,15 @@ public class TaskController {
             return ResponseEntity.ok("Task is Deleted Success");
         }
         return ResponseEntity.badRequest().body("Task is not able to be Deleted!");
+    }
+
+    @PostMapping("/check-title")
+    public ResponseEntity<String> isEmailAvailable(@RequestParam int userId, @RequestParam String name){
+        boolean titleAvailable = taskDao.isTaskNameAvailable(userId, name);
+
+        if(titleAvailable){
+            return ResponseEntity.ok("Title is Available!");
+        }
+        return ResponseEntity.badRequest().body("Title is not Available!");
     }
 }
