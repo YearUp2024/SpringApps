@@ -153,6 +153,28 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public boolean isUsernameAvailable(String username) {
+        String sql =
+                """
+                SELECT COUNT(*)
+                FROM task_manager.users
+                WHERE username = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, username);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                if(resultSet.next()){
+                    return resultSet.getInt(1) == 0;
+                }
+            }
+            return preparedStatement.executeUpdate() > 0;
+        }catch(SQLException e){
+            log.error("Error while Checking is Username Available: {}", e.getMessage());
+        }
         return false;
     }
 

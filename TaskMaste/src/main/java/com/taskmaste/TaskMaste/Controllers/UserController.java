@@ -64,4 +64,14 @@ public class UserController {
         }
         return ResponseEntity.badRequest().body("User was not able to be Validated!");
     }
+
+    @PostMapping("/check-username")
+    public ResponseEntity<String> isUsernameAvailable(@RequestBody User user){
+        boolean usernameAvailable = userDao.isUsernameAvailable(user.getUsername());
+
+        if(usernameAvailable){
+            return ResponseEntity.ok("Username is Available!");
+        }
+        return ResponseEntity.badRequest().body("Username is not Available!");
+    }
 }
