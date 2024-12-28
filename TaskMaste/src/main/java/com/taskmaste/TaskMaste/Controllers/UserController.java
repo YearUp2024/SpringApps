@@ -54,4 +54,14 @@ public class UserController {
         }
         return ResponseEntity.badRequest().body("User was not able to be Deleted!");
     }
+
+    @PostMapping("/validate")
+    public ResponseEntity<String> validateCredentials(@RequestBody User user){
+        boolean isUserValid = userDao.validateUserCredentials(user.getUsername(), user.getPassword());
+
+        if(isUserValid){
+            return ResponseEntity.ok("User is Validated Successfully!");
+        }
+        return ResponseEntity.badRequest().body("User was not able to be Validated!");
+    }
 }

@@ -126,6 +126,28 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public boolean validateUserCredentials(String username, String password) {
+        String sql =
+                """
+                SELECT COUNT(*)
+                FROM task_manager.users
+                WHERE username = ? AND password = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                if(resultSet.next()){
+                    return resultSet.getInt(1) > 0;
+                }
+            }
+        }catch(SQLException e){
+            log.error("Error while Validating User: {}", e.getMessage());
+        }
         return false;
     }
 
