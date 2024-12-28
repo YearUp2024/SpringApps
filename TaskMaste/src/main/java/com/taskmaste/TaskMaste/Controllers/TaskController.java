@@ -25,4 +25,14 @@ public class TaskController {
     public List<Task> getAllTasks(@PathVariable int userId){
         return taskDao.getAllTasks(userId);
     }
+
+    @GetMapping("/taskId/{taskId}")
+    public ResponseEntity<Task> getTaskByTaskId(@PathVariable int taskId){
+        Task taskByTaskId = taskDao.getTaskByTaskId(taskId);
+
+        if(taskByTaskId != null){
+            return ResponseEntity.ok(taskByTaskId);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

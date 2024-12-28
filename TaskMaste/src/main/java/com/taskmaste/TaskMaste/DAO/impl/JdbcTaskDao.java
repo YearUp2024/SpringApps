@@ -54,13 +54,40 @@ public class JdbcTaskDao implements TaskDao {
                 }
             }
         }catch(SQLException e){
-            log.error("Error while trying to get All Tasks");
+            log.error("Error while trying to get All Tasks: {}", e.getMessage());
         }
         return tasks;
     }
 
     @Override
-    public Task getTaskById(int taskId) {
+    public Task getTaskByTaskId(int taskId) {
+        String sql =
+                """
+                SELECT title, description, due_date, completion_status, task_type
+                FROM task_manager.tasks
+                WHERE task_id = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setInt(1, taskId);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                if(resultSet.next()){
+                    return new Task(
+                            resultSet.getString("title"),
+                            resultSet.getString("description"),
+                            resultSet.getDate("due_date"),
+                            resultSet.getBoolean("completion_status"),
+                            resultSet.getString("task_type")
+                    );
+                }
+            }
+        }catch(SQLException e){
+            log.error("Error while trying to get Task by Task ID: {}", e.getMessage());
+        }
         return null;
     }
 
