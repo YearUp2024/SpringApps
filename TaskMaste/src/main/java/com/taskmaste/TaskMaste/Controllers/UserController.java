@@ -44,4 +44,14 @@ public class UserController {
         }
         return ResponseEntity.badRequest().body("User was not able to be Updated!");
     }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> isDeletedUser(@PathVariable int userId){
+        boolean userDeleted = userDao.deleteUser(userId);
+
+        if(userDeleted){
+            return ResponseEntity.ok("User Deleted Successfully!");
+        }
+        return ResponseEntity.badRequest().body("User was not able to be Deleted!");
+    }
 }

@@ -105,6 +105,22 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public boolean deleteUser(int userId) {
+        String sql =
+                """
+                DELETE FROM task_manager.users
+                WHERE user_id = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setInt(1, userId);
+
+            return preparedStatement.executeUpdate() > 0;
+        }catch(SQLException e){
+            log.error("Error while Delete User: {}", e.getMessage());
+        }
         return false;
     }
 
