@@ -10,7 +10,7 @@ public interface TaskDao {
     Task getTaskByTaskId(int taskId);
     List<Task> getTasksByType(String taskType, int userId);
     boolean createTask(String name, String description, Date duedate, boolean completionstatus, String taskType, int categoryId, int userId);
-    boolean updateTaskStatus(int taskId, boolean completionStatus);
+    boolean updateTaskStatus(int taskId, boolean completionstatus);
     boolean deleteTask(int taskId);
     boolean isTaskNameAvailable(String name, int userId);
 }

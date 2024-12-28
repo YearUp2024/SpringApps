@@ -151,7 +151,26 @@ public class JdbcTaskDao implements TaskDao {
     }
 
     @Override
-    public boolean updateTaskStatus(int taskId, boolean completionStatus) {
+    public boolean updateTaskStatus(int taskId, boolean completionstatus) {
+        String sql =
+                """
+                UPDATE task_manager.tasks
+                SET completion_status = ?
+                WHERE task_id = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setBoolean(1, completionstatus);
+            preparedStatement.setInt(2, taskId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        }catch(SQLException e){
+            log.error("Error while trying to Update Task: {}", e.getMessage());
+        }
         return false;
     }
 

@@ -39,7 +39,7 @@ public class TaskController {
     }
 
     @PostMapping("/{categoryId}/{userId}")
-    public ResponseEntity<String> createTask(@RequestBody Task task, @PathVariable int categoryId, @PathVariable int userId){
+    public ResponseEntity<String> isTaskCreated(@RequestBody Task task, @PathVariable int categoryId, @PathVariable int userId){
         boolean taskCreated = taskDao.createTask(
                 task.getName(),
                 task.getDescription(),
@@ -54,5 +54,15 @@ public class TaskController {
             return ResponseEntity.ok("Task is Created Successfully!");
         }
         return ResponseEntity.badRequest().body("Task was not able to be Created!");
+    }
+
+    @PutMapping("/{taskId}/{completionstatus}")
+    public ResponseEntity<String> isTaskUpdated(@PathVariable int taskId, @PathVariable boolean completionstatus){
+        boolean taskUpdated = taskDao.updateTaskStatus(taskId, completionstatus);
+
+        if(taskUpdated){
+            return ResponseEntity.ok("Task is Updated Successfully!");
+        }
+        return ResponseEntity.badRequest().body("Task is not able to be Updated!");
     }
 }
