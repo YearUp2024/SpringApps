@@ -180,6 +180,27 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public boolean isEmailAvailable(String email) {
+        String sql =
+                """
+                SELECT COUNT(*)
+                FROM task_manager.users
+                WHERE email = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, email);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                if(resultSet.next()){
+                    return resultSet.getInt(1) == 0;
+                }
+            }
+        }catch(SQLException e){
+            log.error("Error while Checking is Email Available: {}", e.getMessage());
+        }
         return false;
     }
 }

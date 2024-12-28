@@ -74,4 +74,14 @@ public class UserController {
         }
         return ResponseEntity.badRequest().body("Username is not Available!");
     }
+
+    @PostMapping("/check-email")
+    public ResponseEntity<String> isEmailAvailable(@RequestBody User user){
+        boolean emailAvailable = userDao.isEmailAvailable(user.getEmail());
+
+        if(emailAvailable){
+            return ResponseEntity.ok("Email is Available!");
+        }
+        return ResponseEntity.badRequest().body("Email is not Available!");
+    }
 }
