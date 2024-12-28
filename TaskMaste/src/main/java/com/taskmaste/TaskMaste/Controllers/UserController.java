@@ -34,4 +34,14 @@ public class UserController {
         }
         return ResponseEntity.badRequest().body("User was not able to be Created!");
     }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<String> isUpdateUser(@RequestBody User user, @PathVariable int userId){
+        boolean updateUser = userDao.updateUser(user.getUsername(), user.getEmail(), user.getPassword(), userId);
+
+        if(updateUser){
+            return ResponseEntity.ok("User Updated Successfully!");
+        }
+        return ResponseEntity.badRequest().body("User was not able to be Updated!");
+    }
 }

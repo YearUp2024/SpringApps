@@ -71,8 +71,7 @@ public class JdbcUserDao implements UserDao {
             preparedStatement.setString(2, email);
             preparedStatement.setString(3, password);
 
-            int rowsAffected = preparedStatement.executeUpdate();
-            return rowsAffected > 0;
+            return preparedStatement.executeUpdate() > 0;
         }catch(SQLException e){
             log.error("Error while Creating User: {}", e.getMessage());
         }
@@ -80,7 +79,27 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public boolean updateUser(String username, String email, String password) {
+    public boolean updateUser(String username, String email, String password, int userId) {
+        String sql =
+                """
+                UPDATE task_manager.users
+                SET username = ?, email = ?, password = ?
+                WHERE user_id = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, email);
+            preparedStatement.setString(3, password);
+            preparedStatement.setInt(4, userId);
+
+            return preparedStatement.executeUpdate() > 0;
+        }catch(SQLException e){
+            log.error("Error while Updating User: {}", e.getMessage());
+        }
         return false;
     }
 
