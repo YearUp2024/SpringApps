@@ -1,6 +1,6 @@
 package com.taskmaste.TaskMaste.Models;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Task {
     private String name;

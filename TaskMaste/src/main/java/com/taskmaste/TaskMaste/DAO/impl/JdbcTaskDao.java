@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Component
@@ -126,12 +126,27 @@ public class JdbcTaskDao implements TaskDao {
     }
 
     @Override
-    public boolean createTask(String name, String description, Date dueDate, String taskType, int userId) {
-        return false;
-    }
+    public boolean createTask(String name, String description, Date duedate, boolean completionstatus, String taskType, int categoryId, int userId) {
+        String sql = """
+            INSERT INTO task_manager.tasks (title, description, due_date, completion_status, task_type, category_id, user_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+            """;
 
-    @Override
-    public boolean updateTask(int taskId, String name, String description, Date dueDate, String taskType) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, description);
+            preparedStatement.setDate(3, duedate);
+            preparedStatement.setBoolean(4, completionstatus);
+            preparedStatement.setString(5, taskType);
+            preparedStatement.setInt(6, categoryId);
+            preparedStatement.setInt(7, userId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            log.error("Error while trying to Create Task: {}", e.getMessage());
+        }
         return false;
     }
 
