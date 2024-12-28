@@ -176,6 +176,23 @@ public class JdbcTaskDao implements TaskDao {
 
     @Override
     public boolean deleteTask(int taskId) {
+        String sql =
+                """
+                DELETE FROM task_manager.tasks
+                WHERE task_id = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setInt(1, taskId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        }catch(SQLException e){
+            log.error("Error while trying to Delete Task: ", e.getMessage());
+        }
         return false;
     }
 

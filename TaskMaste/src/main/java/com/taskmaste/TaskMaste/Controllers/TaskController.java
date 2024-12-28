@@ -65,4 +65,14 @@ public class TaskController {
         }
         return ResponseEntity.badRequest().body("Task is not able to be Updated!");
     }
+
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<String> isTaskDeleted(@PathVariable int taskId){
+        boolean taskDeleted = taskDao.deleteTask(taskId);
+
+        if(taskDeleted){
+            return ResponseEntity.ok("Task is Deleted Success");
+        }
+        return ResponseEntity.badRequest().body("Task is not able to be Deleted!");
+    }
 }
