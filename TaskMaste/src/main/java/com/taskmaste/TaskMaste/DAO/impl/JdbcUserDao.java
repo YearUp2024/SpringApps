@@ -26,44 +26,33 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public User getUserById(int userId) {
+    public User getUserByUserName(String username) {
         String sql =
                 """
                 SELECT *
                 FROM task_manager.users
-                WHERE user_id = ?;
+                WHERE username = ?;
                 """;
 
         try(
                 Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ){
-            preparedStatement.setInt(1, userId);
+            preparedStatement.setString(1, username);
 
             try(ResultSet resultSet = preparedStatement.executeQuery()){
-                while(resultSet.next()){
-                    User user = new User(
-                        resultSet.getString("username"),
-                        resultSet.getString("email"),
-                        resultSet.getString("password")
+                if(resultSet.next()){
+                    return new User(
+                            resultSet.getString("username"),
+                            resultSet.getString("email"),
+                            resultSet.getString("password")
                     );
-                    return user;
                 }
             }
         }catch(SQLException e){
-            log.error("Error while getting User");
+            log.error("Error while getting User by Username: {}", e.getMessage(), e);
         }
         return null;
-    }
-
-    @Override
-    public User getUserByUserName(String username) {
-        return null;
-    }
-
-    @Override
-    public List<User> getAllUser() {
-        return List.of();
     }
 
     @Override

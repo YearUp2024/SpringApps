@@ -16,11 +16,10 @@ public class UserController {
         this.userDao = userDao;
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable int userId){
-        User user = userDao.getUserById(userId);
-
-        if(user != null){
+    @GetMapping("/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        User user = userDao.getUserByUserName(username);
+        if (user != null) {
             return ResponseEntity.ok(user);
         }
         return ResponseEntity.notFound().build();
