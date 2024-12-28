@@ -24,4 +24,14 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PostMapping
+    public ResponseEntity<String> isUserCreated(@RequestBody User user){
+        boolean userCreated = userDao.createUser(user.getUsername(), user.getEmail(), user.getPassword());
+
+        if(userCreated){
+            return ResponseEntity.ok("User Created Successfully!");
+        }
+        return ResponseEntity.badRequest().body("User was not able to be Created!");
+    }
 }

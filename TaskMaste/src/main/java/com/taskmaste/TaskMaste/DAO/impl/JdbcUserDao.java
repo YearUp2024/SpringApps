@@ -50,13 +50,32 @@ public class JdbcUserDao implements UserDao {
                 }
             }
         }catch(SQLException e){
-            log.error("Error while getting User by Username: {}", e.getMessage(), e);
+            log.error("Error while getting User by Username: {}", e.getMessage());
         }
         return null;
     }
 
     @Override
     public boolean createUser(String username, String email, String password) {
+        String sql =
+                """
+                INSERT INTO task_manager.users (username, email, password)
+                VALUES (?, ?, ?);
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, email);
+            preparedStatement.setString(3, password);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        }catch(SQLException e){
+            log.error("Error while Creating User: {}", e.getMessage());
+        }
         return false;
     }
 
