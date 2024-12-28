@@ -77,11 +77,11 @@ public class JdbcTaskDao implements TaskDao {
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 if(resultSet.next()){
                     return new Task(
-                            resultSet.getString("title"),
-                            resultSet.getString("description"),
-                            resultSet.getDate("due_date"),
-                            resultSet.getBoolean("completion_status"),
-                            resultSet.getString("task_type")
+                        resultSet.getString("title"),
+                        resultSet.getString("description"),
+                        resultSet.getDate("due_date"),
+                        resultSet.getBoolean("completion_status"),
+                        resultSet.getString("task_type")
                     );
                 }
             }
@@ -93,7 +93,36 @@ public class JdbcTaskDao implements TaskDao {
 
     @Override
     public List<Task> getTasksByType(String taskType, int userId) {
-        return List.of();
+        List<Task> tasksByType = new ArrayList<>();
+        String sql =
+                """
+                SELECT title, description, due_date, completion_status, task_type
+                FROM task_manager.tasks
+                WHERE task_type = ? AND user_id = ?;
+                """;
+
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ){
+            preparedStatement.setString(1, taskType);
+            preparedStatement.setInt(2, userId);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()){
+                    tasksByType.add(new Task(
+                        resultSet.getString("title"),
+                        resultSet.getString("description"),
+                        resultSet.getDate("due_date"),
+                        resultSet.getBoolean("completion_status"),
+                        resultSet.getString("task_type")
+                    ));
+                }
+            }
+        }catch(SQLException e){
+            log.error("Error while trying to get Task by Task Type: {}", e.getMessage());
+        }
+        return tasksByType;
     }
 
     @Override

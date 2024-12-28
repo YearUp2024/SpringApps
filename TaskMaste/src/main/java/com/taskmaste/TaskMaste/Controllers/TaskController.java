@@ -35,4 +35,9 @@ public class TaskController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/{taskType}/{taskId}")
+    public List<Task> getTaskByType(@PathVariable String taskType, @PathVariable int taskId){
+        return taskDao.getTasksByType(taskType, taskId);
+    }
 }
