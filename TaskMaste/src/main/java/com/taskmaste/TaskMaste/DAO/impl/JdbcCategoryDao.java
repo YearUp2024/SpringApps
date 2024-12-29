@@ -30,7 +30,7 @@ public class JdbcCategoryDao implements CategoryDao {
         List<Category> categories = new ArrayList<>();
         String sql =
                 """
-                SELECT name, description, user_id
+                SELECT name, user_id
                 FROM task_manager.categories
                 WHERE user_id = ?;
                 """;
@@ -45,7 +45,6 @@ public class JdbcCategoryDao implements CategoryDao {
                 while(resultSet.next()){
                     Category category = new Category(
                         resultSet.getString("name"),
-                        resultSet.getString("description"),
                         resultSet.getInt("user_id")
                     );
                     categories.add(category);
@@ -61,7 +60,7 @@ public class JdbcCategoryDao implements CategoryDao {
     public Category getCategoryByName(String categoryName, int userId) {
         String sql =
                 """
-                SELECT name, description, user_id
+                SELECT name, user_id
                 FROM task_manager.categories
                 WHERE name = ? AND user_id = ?;
                 """;
@@ -77,7 +76,6 @@ public class JdbcCategoryDao implements CategoryDao {
                 while(resultSet.next()){
                     Category category = new Category(
                             resultSet.getString("name"),
-                            resultSet.getString("description"),
                             resultSet.getInt("user_id")
                     );
                     return category;
@@ -90,11 +88,11 @@ public class JdbcCategoryDao implements CategoryDao {
     }
 
     @Override
-    public boolean createCategory(String name, String description, int userId) {
+    public boolean createCategory(String name, int userId) {
         String sql =
                 """
-                INSERT INTO task_manager.categories (name, description, user_id)
-                VALUES (?, ?, ?)
+                INSERT INTO task_manager.categories (name, user_id)
+                VALUES (?, ?)
                 """;
 
         try(
@@ -102,8 +100,7 @@ public class JdbcCategoryDao implements CategoryDao {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ){
             preparedStatement.setString(1, name);
-            preparedStatement.setString(2, description);
-            preparedStatement.setInt(3, userId);
+            preparedStatement.setInt(2, userId);
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -114,11 +111,11 @@ public class JdbcCategoryDao implements CategoryDao {
     }
 
     @Override
-    public boolean updateCategory(int categoryId, String name, String description, int userId) {
+    public boolean updateCategory(int categoryId, String name, int userId) {
         String sql =
                 """
                 UPDATE task_manager.categories
-                SET name = ?, description = ?
+                SET name = ?
                 WHERE user_id = ? AND category_id = ?;
                 """;
 
@@ -127,9 +124,8 @@ public class JdbcCategoryDao implements CategoryDao {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ){
             preparedStatement.setString(1, name);
-            preparedStatement.setString(2, description);
-            preparedStatement.setInt(3, userId);
-            preparedStatement.setInt(4, categoryId);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.setInt(3, categoryId);
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;

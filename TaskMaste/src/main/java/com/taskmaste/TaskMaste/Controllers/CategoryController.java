@@ -30,7 +30,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<String> createCategory(@RequestBody Category category){
-       boolean categoryCreated = categoryDao.createCategory(category.getName(), category.getDescription(), category.getUserId());
+       boolean categoryCreated = categoryDao.createCategory(category.getName(), category.getUserId());
 
        if(categoryCreated){
            return ResponseEntity.ok("Category Created Successfully!");
@@ -40,7 +40,7 @@ public class CategoryController {
 
     @PutMapping("/{categoryId}")
     public ResponseEntity<String> updateCategory(@PathVariable int categoryId , @RequestBody Category category){
-        boolean categoryUpdated = categoryDao.updateCategory(categoryId, category.getName(), category.getDescription(), category.getUserId());
+        boolean categoryUpdated = categoryDao.updateCategory(categoryId, category.getName(), category.getUserId());
 
         if(categoryUpdated){
             return ResponseEntity.ok("Category Updated Successfully!");
