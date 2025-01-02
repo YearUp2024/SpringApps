@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<docker-compose>
+    <services>
+        <app>
+            <build>.</build>
+            <ports>
+                <port>8080:8080</port>
+            </ports>
+            <depends_on>
+                <service>db</service>
+            </depends_on>
+            <environment>
+                <datasource.url>jdbc:mysql://localhost:3306/task_manager</datasource.url>
+                <datasource.username>${MYSQL_USER}</datasource.username>
+                <datasource.password>${MYSQL_PASSWORD}</datasource.password>
+            </environment>
+        </app>
+
+        <db>
+            <image>mysql:8.0</image>
+            <ports>
+                <port>3306:3306</port>
+            </ports>
+            <environment>
+                <MYSQL_DATABASE>task_manager</MYSQL_DATABASE>
+                <MYSQL_USER>${MYSQL_USER}</MYSQL_USER>
+                <MYSQL_PASSWORD>${MYSQL_PASSWORD}</MYSQL_PASSWORD>
+                <MYSQL_ROOT_PASSWORD>${MYSQL_ROOT_PASSWORD}</MYSQL_ROOT_PASSWORD>
+            </environment>
+        </db>
+    </services>
+</docker-compose>
